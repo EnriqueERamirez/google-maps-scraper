@@ -25,7 +25,8 @@ services:
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     ports:
       - "8081:8080"
-    command: ["serve"]
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["/app/gmapssaas serve || tail -f /dev/null"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -38,7 +39,8 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/gmapssaas?sslmode=disable
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-    command: ["worker"]
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["/app/gmapssaas worker || tail -f /dev/null"]
     depends_on:
       postgres:
         condition: service_healthy
