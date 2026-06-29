@@ -1,12 +1,12 @@
 services:
   postgres:
-    image: postgres:18-alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: gmapssaas
     volumes:
-      - saas_pgdata:/var/lib/postgresql 
+      - saas_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d gmapssaas"]
       interval: 10s
@@ -21,7 +21,8 @@ services:
       dockerfile: Dockerfile.saas
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/gmapssaas?sslmode=disable
-      - GMAPSSAAS_ADDR=:8080
+      - ADDR=:8080
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     ports:
       - "8081:8080"
     command: ["serve"]
@@ -36,6 +37,7 @@ services:
       dockerfile: Dockerfile.saas
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/gmapssaas?sslmode=disable
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     command: ["worker"]
     depends_on:
       postgres:
