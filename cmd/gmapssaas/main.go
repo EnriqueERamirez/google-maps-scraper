@@ -12,6 +12,7 @@ import (
 	"github.com/gosom/google-maps-scraper/cmd/gmapssaas/cmdserve"
 	"github.com/gosom/google-maps-scraper/cmd/gmapssaas/cmdupdate"
 	"github.com/gosom/google-maps-scraper/cmd/gmapssaas/cmdworker"
+	"github.com/gosom/google-maps-scraper/cmd/gmapssaas/cmdmigrate"
 	"github.com/gosom/google-maps-scraper/log"
 
 	// Register infrastructure providers.
@@ -44,6 +45,7 @@ func main() {
 			cmdprovision.Command,
 			cmdupdate.Command,
 			cmdadmin.Command,
+			cmdmigrate.Command(),
 		},
 	}
 
