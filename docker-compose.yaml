@@ -15,6 +15,16 @@ services:
       start_period: 40s
     restart: unless-stopped
 
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - ./migrations:/migrations
+    command: ["-path", "/migrations", "-database", "postgres://postgres:postgres@postgres:5432/gmapssaas?sslmode=disable", "up"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   server:
     build:
       context: .
@@ -27,8 +37,8 @@ services:
       - "8081:8080"
     command: ["serve"]
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   worker:
@@ -40,8 +50,8 @@ services:
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     command: ["worker"]
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     restart: unless-stopped
 
 volumes:
