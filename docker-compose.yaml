@@ -12,7 +12,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-      start_period: 40s        # ← clave: espera antes de empezar a chequear
+      start_period: 40s   
     restart: unless-stopped
 
   server:
